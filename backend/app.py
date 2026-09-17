@@ -78,6 +78,11 @@ def delete_collection(collection_id):
     connection = get_db_connection()
 
     connection.execute(
+        "DELETE FROM images WHERE collection_id = ?",
+        (collection_id,)
+    )
+
+    connection.execute(
         "DELETE FROM collections WHERE id = ?",
         (collection_id,)
     )
@@ -122,6 +127,20 @@ def get_images(collection_id):
     connection.close()
 
     return jsonify([dict(image) for image in images])
+
+@app.route("/images/<int:image_id>", methods=["DELETE"])
+def delete_image(image_id):
+    connection = get_db_connection()
+
+    connection.execute(
+        "DELETE FROM images WHERE id = ?",
+        (image_id,)
+    )
+
+    connection.commit()
+    connection.close()
+
+    return jsonify({"message": "Image deleted"})
 
 if __name__ == "__main__":
     initialize_database()

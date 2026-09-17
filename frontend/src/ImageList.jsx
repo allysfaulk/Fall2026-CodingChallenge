@@ -31,6 +31,17 @@ function ImageList({ collectionId }) {
       })
   }
 
+  function deleteImage(id) {
+  fetch(`http://127.0.0.1:5000/images/${id}`, {
+    method: 'DELETE'
+  })
+    .then(() => {
+      setImages(
+        images.filter((image) => image.id !== id)
+      )
+    })
+}
+
   return (
     <div>
       <button onClick={addImage}>
@@ -44,8 +55,13 @@ function ImageList({ collectionId }) {
             alt="Saved"
             width="200"
           />
+
+          <button onClick={() => deleteImage(image.id)}>
+            Delete Image
+        </button>
+        
         </div>
-      ))}
+     ))}
     </div>
   )
 }
