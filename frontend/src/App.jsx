@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import ImageList from './ImageList'
 
 function App() {
   const [collections, setCollections] = useState([])
@@ -31,6 +32,17 @@ function App() {
     })
 }
 
+function deleteCollection(id) {
+  fetch(`http://127.0.0.1:5000/collections/${id}`, {
+    method: 'DELETE'
+  })
+    .then(() => {
+      setCollections(
+        collections.filter((collection) => collection.id !== id)
+      )
+    })
+}
+
   return (
     <div>
       <h1>My Image Collections</h1>
@@ -40,11 +52,19 @@ function App() {
         Create Collection
       </button>
 
-      {collections.map((collection) => (
-        <div key={collection.id}>
-          <h2>{collection.name}</h2>
-        </div>
-      ))}
+{collections.map((collection) => (
+  <div key={collection.id}>
+    <h2>{collection.name}</h2>
+
+    <button onClick={() => deleteCollection(collection.id)}>
+      Delete
+    </button>
+
+    <ImageList collectionId={collection.id} />
+    
+  </div>
+
+))}
     </div>
   )
 }
