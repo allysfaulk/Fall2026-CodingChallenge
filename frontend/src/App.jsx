@@ -4,6 +4,7 @@ import ImageSearch from './ImageSearch'
 
 function App() {
   const [collections, setCollections] = useState([])
+  const [imageRefresh, setImageRefresh] = useState(0)
 
   useEffect(() => {
     fetch('http://127.0.0.1:5000/collections')
@@ -49,7 +50,10 @@ function deleteCollection(id) {
       <h1>My Image Collections</h1>
       <p>Save and organize your favorite images.</p>
 
-      <ImageSearch collections={collections} />
+      <ImageSearch
+        collections={collections}
+        onImageSaved={() => setImageRefresh(imageRefresh + 1)}
+      />
 
       <button onClick={createCollection}>
         Create Collection
@@ -63,7 +67,10 @@ function deleteCollection(id) {
       Delete
     </button>
 
-    <ImageList collectionId={collection.id} />
+    <ImageList
+      collectionId={collection.id}
+      refresh={imageRefresh}
+    />
 
   </div>
 

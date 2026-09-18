@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-function ImageSearch( {collections}) {
+function ImageSearch( {collections, onImageSaved}) {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState([])
 
@@ -30,7 +30,8 @@ function ImageSearch( {collections}) {
   })
     .then((response) => response.json())
     .then(() => {
-      alert('Image saved!')
+        onImageSaved()
+        alert('Image saved!')
     })
 }
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-function ImageList({ collectionId }) {
+function ImageList({ collectionId, refresh }) {
   const [images, setImages] = useState([])
 
   useEffect(() => {
@@ -9,7 +9,7 @@ function ImageList({ collectionId }) {
       .then((data) => {
         setImages(data)
       })
-  }, [collectionId])
+  }, [collectionId, refresh])
 
   function addImage() {
     const url = prompt('Paste an image URL:')
@@ -59,7 +59,7 @@ function ImageList({ collectionId }) {
           <button onClick={() => deleteImage(image.id)}>
             Delete Image
         </button>
-        
+
         </div>
      ))}
     </div>
