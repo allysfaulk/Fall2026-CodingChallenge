@@ -36,54 +36,61 @@ function ImageSearch( {collections, onImageSaved}) {
 }
 
   return (
-    <div>
-      <h2>Search Images</h2>
+  <div className="image-search">
+    <h2>Discover Images</h2>
+    <p>Search Pixabay and save your favorites to a collection.</p>
 
+    <div className="search-bar">
       <input
         type="text"
-        placeholder="Search for images..."
+        placeholder="Try cats, mountains, architecture..."
         value={query}
         onChange={(event) => setQuery(event.target.value)}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter') {
+            searchImages()
+          }
+        }}
       />
 
-      <button onClick={searchImages}>
+      <button className="primary-button" onClick={searchImages}>
         Search
       </button>
-
-      <div>
-        {results.map((image) => (
-  <div key={image.id}>
-    <img
-      src={image.preview}
-      alt={image.tags}
-      width="150"
-    />
-
-    <select
-      defaultValue=""
-      onChange={(event) => {
-        saveImage(image.url, event.target.value)
-        event.target.value = ""
-      }}
-    >
-      <option value="" disabled>
-        Save to...
-      </option>
-
-      {collections.map((collection) => (
-        <option
-          key={collection.id}
-          value={collection.id}
-        >
-          {collection.name}
-        </option>
-      ))}
-    </select>
-  </div>
-))}
-      </div>
     </div>
-  )
+
+    <div className="search-results">
+      {results.map((image) => (
+        <div className="search-result-card" key={image.id}>
+          <img
+            src={image.preview}
+            alt={image.tags}
+          />
+
+          <select
+            defaultValue=""
+            onChange={(event) => {
+              saveImage(image.url, event.target.value)
+              event.target.value = ""
+            }}
+          >
+            <option value="" disabled>
+              Save to collection...
+            </option>
+
+            {collections.map((collection) => (
+              <option
+                key={collection.id}
+                value={collection.id}
+              >
+                {collection.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      ))}
+    </div>
+  </div>
+)
 }
 
 export default ImageSearch

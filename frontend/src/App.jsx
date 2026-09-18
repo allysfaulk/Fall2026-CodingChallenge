@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import ImageList from './ImageList'
 import ImageSearch from './ImageSearch'
+import './App.css'
 
 function App() {
   const [collections, setCollections] = useState([])
@@ -59,41 +60,57 @@ function shareCollection(id) {
 }
 
   return (
-    <div>
-      <h1>My Image Collections</h1>
-      <p>Save and organize your favorite images.</p>
+  <div className="app">
+    <header className="header">
+      <div>
+        <h1>My Image Collections</h1>
+        <p>Discover, save, and organize images you love.</p>
+      </div>
 
-      <ImageSearch
-        collections={collections}
-        onImageSaved={() => setImageRefresh(imageRefresh + 1)}
-      />
-
-      <button onClick={createCollection}>
-        Create Collection
+      <button className="primary-button" onClick={createCollection}>
+        + New Collection
       </button>
+    </header>
 
-{collections.map((collection) => (
-  <div key={collection.id}>
-    <h2>{collection.name}</h2>
+    <main>
+      <section className="search-section">
+        <ImageSearch
+          collections={collections}
+          onImageSaved={() => setImageRefresh(imageRefresh + 1)}
+        />
+      </section>
 
-    <button onClick={() => deleteCollection(collection.id)}>
-      Delete
-    </button>
+      <section className="collections-section">
+        <h2>Your Collections</h2>
 
-    <button onClick={() => shareCollection(collection.id)}>
-      Share Collection
-    </button>
+        <div className="collections-grid">
+          {collections.map((collection) => (
+            <div className="collection-card" key={collection.id}>
+              <div className="collection-header">
+                <h3>{collection.name}</h3>
 
-    <ImageList
-      collectionId={collection.id}
-      refresh={imageRefresh}
-    />
+                <div className="collection-actions">
+                  <button onClick={() => shareCollection(collection.id)}>
+                    Share
+                  </button>
 
+                  <button onClick={() => deleteCollection(collection.id)}>
+                    Delete
+                  </button>
+                </div>
+              </div>
+
+              <ImageList
+                collectionId={collection.id}
+                refresh={imageRefresh}
+              />
+            </div>
+          ))}
+        </div>
+      </section>
+    </main>
   </div>
-
-))}
-    </div>
-  )
+)
 }
 
 export default App

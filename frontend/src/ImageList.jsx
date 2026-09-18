@@ -72,34 +72,39 @@ function editCaption(image) {
 }
 
   return (
-    <div>
-      <button onClick={addImage}>
-        Add Image
-      </button>
+  <div className="image-list">
+    <button className="add-image-button" onClick={addImage}>
+      + Add Image
+    </button>
 
-    {images.map((image) => (
-        <div key={image.id}>
-            <img
-                 src={image.url}
-                alt={image.caption || 'Saved'}
-                width="200"
-            />
+    <div className="saved-images-grid">
+      {images.map((image) => (
+        <div className="saved-image-card" key={image.id}>
+          <img
+            src={image.url}
+            alt={image.caption || 'Saved'}
+          />
 
+          <div className="image-info">
             {image.caption && (
-                <p>{image.caption}</p>
+              <p>{image.caption}</p>
             )}
 
-            <button onClick={() => editCaption(image)}>
+            <div className="image-actions">
+              <button onClick={() => editCaption(image)}>
                 Edit Caption
-            </button>
+              </button>
 
-            <button onClick={() => deleteImage(image.id)}>
-                Delete Image
-            </button>
+              <button onClick={() => deleteImage(image.id)}>
+                Delete
+              </button>
+            </div>
+          </div>
         </div>
-        ))}
+      ))}
     </div>
-  )
+  </div>
+)
 }
 
 export default ImageList
