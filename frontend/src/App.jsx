@@ -90,6 +90,13 @@ function shareCollection(id) {
                 <h3>{collection.name}</h3>
 
                 <div className="collection-actions">
+                  <a
+                    className="button-link"
+                    href={`/collection/${collection.id}`}
+                  >
+                    Open
+                  </a>  
+
                   <button onClick={() => shareCollection(collection.id)}>
                     Share
                   </button>
