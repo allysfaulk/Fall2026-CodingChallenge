@@ -19,6 +19,7 @@ CORS(app)
 DATABASE = "backend/collections.db"
 
 
+#open a new SQLite connection and return rows that can be accessed by column namne
 def get_db_connection():
     connection = sqlite3.connect(DATABASE)
     connection.row_factory = sqlite3.Row
@@ -109,6 +110,7 @@ def create_collection():
 def delete_collection(collection_id):
     connection = get_db_connection()
 
+    #remove a collection's images first so no orphaned image records remain
     connection.execute(
         "DELETE FROM images WHERE collection_id = ?",
         (collection_id,)
@@ -187,6 +189,7 @@ def search_images():
     if not query:
         return jsonify([])
 
+    #forward the search query and page number to Pixaby for paginated results
     params = urllib.parse.urlencode({
         "key": PIXABAY_API_KEY,
         "q": query,
@@ -197,6 +200,7 @@ def search_images():
 
     url = f"https://pixabay.com/api/?{params}"
 
+    #keep an external Pixaby failure from crashing the Flask API
     try:
         with urllib.request.urlopen(url, timeout=8) as response:
             data = response.read()
@@ -253,10 +257,12 @@ def share_collection(collection_id):
         connection.close()
         return jsonify({"error": "Collection not found"}), 404
 
+    # reuse an existing share ID so public collection links stay stable
     if existing["share_id"]:
         connection.close()
         return jsonify({"share_id": existing["share_id"]})
 
+    #generate a short unique ID that can be used in a public share URL
     share_id = uuid.uuid4().hex[:8]
 
     connection.execute(
@@ -273,6 +279,7 @@ def share_collection(collection_id):
 def unshare_collection(collection_id):
     connection = get_db_connection()
 
+    #clearing the share ID makes the collection private and invalidates its old link
     connection.execute(
         "UPDATE collections SET share_id = NULL WHERE id = ?",
         (collection_id,)

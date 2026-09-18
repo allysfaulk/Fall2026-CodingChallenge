@@ -272,10 +272,6 @@ button:hover {
   transform: rotate(1deg) translateY(-2px);
 }
 
-.back-link:hover {
-  color: #111;
-}
-
 .collection-page-header {
   display: flex;
   justify-content: space-between;

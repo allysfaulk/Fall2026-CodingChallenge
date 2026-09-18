@@ -5,6 +5,8 @@ import App from './App.jsx'
 import SharedCollection from './SharedCollection.jsx'
 import CollectionPage from './CollectionPage.jsx'
 
+// Use the browser path to choose between the home, collection, and shared views
+// without adding a separate routing library.
 const path = window.location.pathname
 
 const shareMatch = path.match(/^\/share\/(.+)$/)
