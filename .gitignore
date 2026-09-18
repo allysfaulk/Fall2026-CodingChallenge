@@ -1,6 +1,9 @@
 # Secret environment variables
 backend/.env
 
+# Local database
+backend/collections.db
+
 # Python cache files
 __pycache__/
 *.pyc
