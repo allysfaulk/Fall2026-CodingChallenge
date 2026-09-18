@@ -45,6 +45,19 @@ function deleteCollection(id) {
     })
 }
 
+function shareCollection(id) {
+  fetch(`http://127.0.0.1:5000/collections/${id}/share`, {
+    method: 'POST'
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      const shareUrl =
+        `${window.location.origin}/share/${data.share_id}`
+
+      prompt('Copy this share link:', shareUrl)
+    })
+}
+
   return (
     <div>
       <h1>My Image Collections</h1>
@@ -65,6 +78,10 @@ function deleteCollection(id) {
 
     <button onClick={() => deleteCollection(collection.id)}>
       Delete
+    </button>
+
+    <button onClick={() => shareCollection(collection.id)}>
+      Share Collection
     </button>
 
     <ImageList

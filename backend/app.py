@@ -3,6 +3,7 @@ import os
 import urllib.parse
 import urllib.request
 from dotenv import load_dotenv
+import uuid
 
 from flask import Flask, jsonify, request
 from flask_cors import CORS
@@ -26,6 +27,7 @@ def get_db_connection():
 def initialize_database():
     connection = get_db_connection()
 
+    # Create the collections table
     connection.execute("""
         CREATE TABLE IF NOT EXISTS collections (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -33,18 +35,28 @@ def initialize_database():
         )
     """)
 
+    # Create the images table
     connection.execute("""
-    CREATE TABLE IF NOT EXISTS images (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        collection_id INTEGER NOT NULL,
-        url TEXT NOT NULL,
-        FOREIGN KEY (collection_id) REFERENCES collections (id)
-    )
+        CREATE TABLE IF NOT EXISTS images (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            collection_id INTEGER NOT NULL,
+            url TEXT NOT NULL,
+            FOREIGN KEY (collection_id) REFERENCES collections (id)
+        )
     """)
 
+    # Add captions to images if the column doesn't exist yet
     try:
         connection.execute(
             "ALTER TABLE images ADD COLUMN caption TEXT DEFAULT ''"
+        )
+    except sqlite3.OperationalError:
+        pass
+
+    # Add sharing IDs to collections if the column doesn't exist yet
+    try:
+        connection.execute(
+            "ALTER TABLE collections ADD COLUMN share_id TEXT"
         )
     except sqlite3.OperationalError:
         pass
@@ -209,6 +221,47 @@ def update_image(image_id):
     return jsonify({
         "id": image_id,
         "caption": caption
+    })
+
+@app.route("/collections/<int:collection_id>/share", methods=["POST"])
+def share_collection(collection_id):
+    share_id = uuid.uuid4().hex[:8]
+
+    connection = get_db_connection()
+
+    connection.execute(
+        "UPDATE collections SET share_id = ? WHERE id = ?",
+        (share_id, collection_id)
+    )
+
+    connection.commit()
+    connection.close()
+
+    return jsonify({"share_id": share_id})
+
+@app.route("/shared/<share_id>", methods=["GET"])
+def get_shared_collection(share_id):
+    connection = get_db_connection()
+
+    collection = connection.execute(
+        "SELECT * FROM collections WHERE share_id = ?",
+        (share_id,)
+    ).fetchone()
+
+    if collection is None:
+        connection.close()
+        return jsonify({"error": "Collection not found"}), 404
+
+    images = connection.execute(
+        "SELECT * FROM images WHERE collection_id = ?",
+        (collection["id"],)
+    ).fetchall()
+
+    connection.close()
+
+    return jsonify({
+        "collection": dict(collection),
+        "images": [dict(image) for image in images]
     })
 
 if __name__ == "__main__":
