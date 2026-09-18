@@ -18,7 +18,7 @@ function App() {
   function createCollection() {
   const name = prompt('Enter a collection name:')
 
-  if (!name) {
+  if (!name || !name.trim()) {
     return
   }
 
@@ -27,7 +27,7 @@ function App() {
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ name: name })
+    body: JSON.stringify({ name: name.trim() })
   })
     .then((response) => response.json())
     .then((newCollection) => {
@@ -36,6 +36,14 @@ function App() {
 }
 
 function deleteCollection(id) {
+  const confirmed = window.confirm(
+    'Delete this collection and all of its images?'
+  )
+
+  if (!confirmed) {
+    return
+  }
+
   fetch(`http://127.0.0.1:5000/collections/${id}`, {
     method: 'DELETE'
   })

@@ -32,7 +32,15 @@ function ImageList({ collectionId, refresh }) {
   }
 
   function deleteImage(id) {
-  fetch(`http://127.0.0.1:5000/images/${id}`, {
+    const confirmed = window.confirm(
+        'Delete this image?'
+    )
+
+    if (!confirmed) {
+        return
+}
+  
+    fetch(`http://127.0.0.1:5000/images/${id}`, {
     method: 'DELETE'
   })
     .then(() => {

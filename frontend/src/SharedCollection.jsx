@@ -3,15 +3,38 @@ import { useEffect, useState } from 'react'
 function SharedCollection({ shareId }) {
   const [collection, setCollection] = useState(null)
   const [images, setImages] = useState([])
+  const [error, setError] = useState('')
 
   useEffect(() => {
     fetch(`http://127.0.0.1:5000/shared/${shareId}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setCollection(data.collection)
-        setImages(data.images)
-      })
-  }, [shareId])
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('Collection not found')
+            }
+            return response.json()
+        })
+        .then((data) => {
+            setCollection(data.collection)
+            setImages(data.images)
+        })
+        .catch(() => {
+            setError('This shared collection could not be found.')
+        })
+}, [shareId])
+
+    if (error) {
+        return (
+            <div className="app">
+                <div className="empty-state">
+                    <h1>Collection not found</h1>
+                    <p>{error}</p>
+                    <a className="button-link" href="/">
+                        Back Home
+                    </a>
+                </div>
+            </div>
+        )
+    }
 
   if (!collection) {
     return <p>Loading collection...</p>
