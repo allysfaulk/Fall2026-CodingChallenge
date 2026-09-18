@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import ImageList from './ImageList'
 import ImageSearch from './ImageSearch'
 import './App.css'
+import CollectionCard from './CollectionCard'
 
 function App() {
   const [collections, setCollections] = useState([])
@@ -85,33 +85,12 @@ function shareCollection(id) {
 
         <div className="collections-grid">
           {collections.map((collection) => (
-            <div className="collection-card" key={collection.id}>
-              <div className="collection-header">
-                <h3>{collection.name}</h3>
-
-                <div className="collection-actions">
-                  <a
-                    className="button-link"
-                    href={`/collection/${collection.id}`}
-                  >
-                    Open
-                  </a>  
-
-                  <button onClick={() => shareCollection(collection.id)}>
-                    Share
-                  </button>
-
-                  <button onClick={() => deleteCollection(collection.id)}>
-                    Delete
-                  </button>
-                </div>
-              </div>
-
-              <ImageList
-                collectionId={collection.id}
-                refresh={imageRefresh}
-              />
-            </div>
+            <CollectionCard
+              key={collection.id}
+              collection={collection}
+              onShare={shareCollection}
+              onDelete={deleteCollection}
+            />
           ))}
         </div>
       </section>

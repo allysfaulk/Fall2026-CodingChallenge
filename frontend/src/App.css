@@ -321,3 +321,50 @@ button:hover {
     flex-direction: column;
   }
 }
+
+.collection-preview-card {
+  overflow: hidden;
+  background: white;
+  border: 1px solid #e8e8ea;
+  border-radius: 16px;
+}
+
+.collection-preview-image {
+  display: block;
+  height: 220px;
+  background: #eeeeef;
+  text-decoration: none;
+}
+
+.collection-preview-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.no-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #888;
+}
+
+.collection-preview-info {
+  padding: 18px;
+}
+
+.collection-preview-info h3 {
+  margin: 0 0 4px;
+  font-size: 21px;
+}
+
+.collection-preview-info p {
+  margin: 0 0 16px;
+  color: #777;
+}
+
+.collection-preview-info .collection-actions {
+  justify-content: flex-start;
+}
