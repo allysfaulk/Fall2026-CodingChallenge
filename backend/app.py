@@ -182,6 +182,7 @@ def delete_image(image_id):
 @app.route("/search", methods=["GET"])
 def search_images():
     query = request.args.get("q", "").strip()
+    page = request.args.get("page", 1, type=int)
 
     if not query:
         return jsonify([])
@@ -190,7 +191,8 @@ def search_images():
         "key": PIXABAY_API_KEY,
         "q": query,
         "image_type": "photo",
-        "per_page": 12
+        "per_page": 12,
+        "page": page
     })
 
     url = f"https://pixabay.com/api/?{params}"

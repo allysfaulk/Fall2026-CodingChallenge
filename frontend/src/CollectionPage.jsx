@@ -23,7 +23,7 @@ function CollectionPage({ collectionId }) {
   return (
     <div className="app">
       <a className="back-link" href="/">
-        ← Back to Collections
+        ← back to my collections ✿
       </a>
 
       <div className="collection-page-header">

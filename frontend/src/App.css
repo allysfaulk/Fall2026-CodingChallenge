@@ -18,6 +18,7 @@
 
 .header h1 {
   margin: 0 0 8px;
+  font-family: "Arial Rounded MT Bold", "Trebuchet MS", sans-serif;
   font-size: 44px;
   letter-spacing: -1px;
 }
@@ -256,8 +257,19 @@ button:hover {
 .back-link {
   display: inline-block;
   margin-bottom: 32px;
-  color: #555;
+  padding: 8px 14px;
+  color: #352b42;
+  background: #ffd86b;
+  border: 2px solid #352b42;
+  box-shadow: 3px 3px 0 #ff9fc6;
   text-decoration: none;
+  font-weight: bold;
+  transform: rotate(-1deg);
+}
+
+.back-link:hover {
+  color: #352b42;
+  transform: rotate(1deg) translateY(-2px);
 }
 
 .back-link:hover {
@@ -519,4 +531,23 @@ button:hover {
 
 .not-found-note p {
   margin-bottom: 24px;
+}
+
+.load-more-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.load-more-button {
+  background: #8dd8ff;
+  color: #352b42;
+  border: 2px solid #352b42;
+  box-shadow: 3px 3px 0 #ffd86b;
+  font-weight: bold;
+}
+
+.load-more-button:hover {
+  transform: translateY(-2px) rotate(-1deg);
+  opacity: 1;
 }

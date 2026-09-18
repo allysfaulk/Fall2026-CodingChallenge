@@ -4,21 +4,38 @@ function ImageSearch( {collections, onImageSaved}) {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState([])
   const [hasSearched, setHasSearched] = useState(false)
+  const [page, setPage] = useState(1)
 
-  function searchImages() {
-    if (!query) {
-      return
-    }
-
-    fetch(`http://127.0.0.1:5000/search?q=${encodeURIComponent(query)}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setResults(data)
-        setHasSearched(true)
-      })
+function searchImages() {
+  if (!query.trim()) {
+    return
   }
 
-  function saveImage(imageUrl, collectionId) {
+  fetch(
+    `http://127.0.0.1:5000/search?q=${encodeURIComponent(query)}&page=1`
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      setResults(data)
+      setPage(1)
+      setHasSearched(true)
+    })
+}
+
+function loadMore() {
+  const nextPage = page + 1
+
+  fetch(
+    `http://127.0.0.1:5000/search?q=${encodeURIComponent(query)}&page=${nextPage}`
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      setResults([...results, ...data])
+      setPage(nextPage)
+    })
+}
+
+function saveImage(imageUrl, collectionId) {
   if (!collectionId) {
     return
   }
@@ -91,6 +108,14 @@ function ImageSearch( {collections, onImageSaved}) {
         </div>
       ))}
     </div>
+
+    {results.length > 0 && (
+        <div className="load-more-container">
+            <button className="load-more-button" onClick={loadMore}>
+                load more items ✿
+            </button>
+        </div>
+    )}
 
     {hasSearched && results.length === 0 && (
         <p className="no-results">

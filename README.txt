@@ -1,4 +1,4 @@
-Image Saving and Sharing App
+Keepsake - Image Saving and Sharing App
 
 Name: Ally Faulk
 Vanderbilt Email: [ally.s.faulk@vanderbilt.edu](mailto:ally.s.faulk@vanderbilt.edu)
@@ -66,16 +66,16 @@ http://localhost:5173
 
 FEATURES
 
-* Create and delete image collections
-* Search for images using the Pixabay API
-* Save images to specific collections
-* Add images directly using an image URL
-* Edit captions on saved images
-* Delete saved images
-* Persistent storage using SQLite
-* Individual collection pages
-* Unique, view-only collection sharing links
-* Responsive collection and image gallery layouts
+- Search for images using the Pixabay API with paginated results
+- Create and organize image collections
+- Save images from search results or image URLs
+- Edit captions on saved images
+- Delete saved images and collections
+- Persistent storage using SQLite
+- Individual collection pages
+- Public/private collection controls
+- Unique, revocable view-only sharing links
+- Responsive scrapbook-inspired interface
 
 REFLECTION
 
