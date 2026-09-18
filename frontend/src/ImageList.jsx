@@ -42,26 +42,62 @@ function ImageList({ collectionId, refresh }) {
     })
 }
 
+function editCaption(image) {
+  const caption = prompt(
+    'Enter a caption:',
+    image.caption || ''
+  )
+
+  if (caption === null) {
+    return
+  }
+
+  fetch(`http://127.0.0.1:5000/images/${image.id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ caption: caption })
+  })
+    .then((response) => response.json())
+    .then(() => {
+      setImages(
+        images.map((currentImage) =>
+          currentImage.id === image.id
+            ? { ...currentImage, caption: caption }
+            : currentImage
+        )
+      )
+    })
+}
+
   return (
     <div>
       <button onClick={addImage}>
         Add Image
       </button>
 
-      {images.map((image) => (
+    {images.map((image) => (
         <div key={image.id}>
-          <img
-            src={image.url}
-            alt="Saved"
-            width="200"
-          />
+            <img
+                 src={image.url}
+                alt={image.caption || 'Saved'}
+                width="200"
+            />
 
-          <button onClick={() => deleteImage(image.id)}>
-            Delete Image
-        </button>
+            {image.caption && (
+                <p>{image.caption}</p>
+            )}
 
+            <button onClick={() => editCaption(image)}>
+                Edit Caption
+            </button>
+
+            <button onClick={() => deleteImage(image.id)}>
+                Delete Image
+            </button>
         </div>
-     ))}
+        ))}
     </div>
   )
 }

@@ -42,6 +42,13 @@ def initialize_database():
     )
     """)
 
+    try:
+        connection.execute(
+            "ALTER TABLE images ADD COLUMN caption TEXT DEFAULT ''"
+        )
+    except sqlite3.OperationalError:
+        pass
+
     connection.commit()
     connection.close()
 
@@ -183,6 +190,26 @@ def search_images():
         })
 
     return jsonify(results)
+
+@app.route("/images/<int:image_id>", methods=["PUT"])
+def update_image(image_id):
+    data = request.get_json()
+    caption = data.get("caption", "")
+
+    connection = get_db_connection()
+
+    connection.execute(
+        "UPDATE images SET caption = ? WHERE id = ?",
+        (caption, image_id)
+    )
+
+    connection.commit()
+    connection.close()
+
+    return jsonify({
+        "id": image_id,
+        "caption": caption
+    })
 
 if __name__ == "__main__":
     initialize_database()
