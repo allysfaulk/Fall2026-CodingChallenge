@@ -94,8 +94,8 @@ function unshareCollection(id) {
   <div className="app">
     <header className="header">
       <div>
-        <h1>My Image Collections</h1>
-        <p>Discover, save, and organize images you love.</p>
+        <h1>Keepsake ✿</h1>
+        <p>Collect the things that make you smile.</p>
       </div>
 
       <button className="primary-button" onClick={createCollection}>

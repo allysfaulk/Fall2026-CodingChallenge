@@ -25,7 +25,7 @@ function SharedCollection({ shareId }) {
     if (error) {
         return (
             <div className="app">
-                <div className="empty-state">
+                <div className="not-found-note">
                     <h1>Collection not found</h1>
                     <p>{error}</p>
                     <a className="button-link" href="/">
