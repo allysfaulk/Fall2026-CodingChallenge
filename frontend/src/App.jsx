@@ -60,10 +60,33 @@ function shareCollection(id) {
   })
     .then((response) => response.json())
     .then((data) => {
+      setCollections(
+        collections.map((collection) =>
+          collection.id === id
+            ? { ...collection, share_id: data.share_id }
+            : collection
+        )
+      )
+
       const shareUrl =
         `${window.location.origin}/share/${data.share_id}`
 
       prompt('Copy this share link:', shareUrl)
+    })
+}
+
+function unshareCollection(id) {
+  fetch(`http://127.0.0.1:5000/collections/${id}/unshare`, {
+    method: 'POST'
+  })
+    .then(() => {
+      setCollections(
+        collections.map((collection) =>
+          collection.id === id
+            ? { ...collection, share_id: null }
+            : collection
+        )
+      )
     })
 }
 
@@ -97,7 +120,9 @@ function shareCollection(id) {
               key={collection.id}
               collection={collection}
               onShare={shareCollection}
+              onUnshare={unshareCollection}
               onDelete={deleteCollection}
+              refresh={imageRefresh}
             />
           ))}
         </div>

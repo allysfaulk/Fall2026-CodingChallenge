@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-function CollectionCard({ collection, onShare, onDelete }) {
+function CollectionCard({ collection, onShare, onUnshare, onDelete, refresh }) {
   const [images, setImages] = useState([])
 
   useEffect(() => {
@@ -9,9 +9,10 @@ function CollectionCard({ collection, onShare, onDelete }) {
       .then((data) => {
         setImages(data)
       })
-  }, [collection.id])
+  }, [collection.id, refresh])
 
   const previewImage = images[0]
+  const isPublic = Boolean(collection.share_id)
 
   return (
     <div className="collection-preview-card">
@@ -36,7 +37,11 @@ function CollectionCard({ collection, onShare, onDelete }) {
           <h3>{collection.name}</h3>
           <p>
             {images.length} {images.length === 1 ? 'image' : 'images'}
-          </p>
+            {' · '}
+            <span className={isPublic ? 'badge-public' : 'badge-private'}>
+                {isPublic ? 'Public' : 'Private'}
+            </span>
+        </p>
         </div>
 
         <div className="collection-actions">
@@ -47,9 +52,15 @@ function CollectionCard({ collection, onShare, onDelete }) {
             Open
           </a>
 
-          <button onClick={() => onShare(collection.id)}>
-            Share
-          </button>
+          {isPublic ? (
+            <button onClick={() => onUnshare(collection.id)}>
+                Make Private
+            </button>
+        ) : (
+            <button onClick={() => onShare(collection.id)}>
+                Share
+            </button>
+        )}
 
           <button onClick={() => onDelete(collection.id)}>
             Delete

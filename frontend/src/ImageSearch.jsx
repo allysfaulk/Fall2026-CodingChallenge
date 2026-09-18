@@ -3,6 +3,7 @@ import { useState } from 'react'
 function ImageSearch( {collections, onImageSaved}) {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState([])
+  const [hasSearched, setHasSearched] = useState(false)
 
   function searchImages() {
     if (!query) {
@@ -13,6 +14,7 @@ function ImageSearch( {collections, onImageSaved}) {
       .then((response) => response.json())
       .then((data) => {
         setResults(data)
+        setHasSearched(true)
       })
   }
 
@@ -89,6 +91,12 @@ function ImageSearch( {collections, onImageSaved}) {
         </div>
       ))}
     </div>
+
+    {hasSearched && results.length === 0 && (
+        <p className="no-results">
+            No images found. Try a different search.
+        </p>
+    )}
   </div>
 )
 }

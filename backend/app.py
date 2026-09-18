@@ -4,6 +4,7 @@ import urllib.parse
 import urllib.request
 from dotenv import load_dotenv
 import uuid
+import json
 
 from flask import Flask, jsonify, request
 from flask_cors import CORS
@@ -80,20 +81,24 @@ def get_collections():
 
 @app.route("/collections", methods=["POST"])
 def create_collection():
-    data = request.get_json()
+    data = request.get_json() or {}
+    name = data.get("name", "").strip()
+
+    if not name:
+        return jsonify({"error": "Collection name is required"}), 400
 
     connection = get_db_connection()
 
     cursor = connection.execute(
         "INSERT INTO collections (name) VALUES (?)",
-        (data["name"],)
+        (name,)
     )
 
     connection.commit()
 
     new_collection = {
         "id": cursor.lastrowid,
-        "name": data["name"]
+        "name": name
     }
 
     connection.close()
@@ -121,13 +126,17 @@ def delete_collection(collection_id):
 
 @app.route("/collections/<int:collection_id>/images", methods=["POST"])
 def add_image(collection_id):
-    data = request.get_json()
+    data = request.get_json() or {}
+    url = data.get("url", "").strip()
+
+    if not url:
+        return jsonify({"error": "Image URL is required"}), 400
 
     connection = get_db_connection()
 
     cursor = connection.execute(
         "INSERT INTO images (collection_id, url) VALUES (?, ?)",
-        (collection_id, data["url"])
+        (collection_id, url)
     )
 
     connection.commit()
@@ -135,7 +144,8 @@ def add_image(collection_id):
     new_image = {
         "id": cursor.lastrowid,
         "collection_id": collection_id,
-        "url": data["url"]
+        "url": url,
+        "caption": ""
     }
 
     connection.close()
@@ -171,7 +181,7 @@ def delete_image(image_id):
 
 @app.route("/search", methods=["GET"])
 def search_images():
-    query = request.args.get("q", "")
+    query = request.args.get("q", "").strip()
 
     if not query:
         return jsonify([])
@@ -185,15 +195,20 @@ def search_images():
 
     url = f"https://pixabay.com/api/?{params}"
 
-    with urllib.request.urlopen(url) as response:
-        data = response.read()
+    try:
+        with urllib.request.urlopen(url, timeout=8) as response:
+            data = response.read()
 
-    import json
-    pixabay_data = json.loads(data)
+        pixabay_data = json.loads(data)
+
+    except Exception:
+        return jsonify({
+            "error": "Image search is unavailable right now"
+        }), 502
 
     results = []
 
-    for image in pixabay_data["hits"]:
+    for image in pixabay_data.get("hits", []):
         results.append({
             "id": image["id"],
             "url": image["webformatURL"],
@@ -225,9 +240,22 @@ def update_image(image_id):
 
 @app.route("/collections/<int:collection_id>/share", methods=["POST"])
 def share_collection(collection_id):
-    share_id = uuid.uuid4().hex[:8]
-
     connection = get_db_connection()
+
+    existing = connection.execute(
+        "SELECT share_id FROM collections WHERE id = ?",
+        (collection_id,)
+    ).fetchone()
+
+    if existing is None:
+        connection.close()
+        return jsonify({"error": "Collection not found"}), 404
+
+    if existing["share_id"]:
+        connection.close()
+        return jsonify({"share_id": existing["share_id"]})
+
+    share_id = uuid.uuid4().hex[:8]
 
     connection.execute(
         "UPDATE collections SET share_id = ? WHERE id = ?",
@@ -238,6 +266,20 @@ def share_collection(collection_id):
     connection.close()
 
     return jsonify({"share_id": share_id})
+
+@app.route("/collections/<int:collection_id>/unshare", methods=["POST"])
+def unshare_collection(collection_id):
+    connection = get_db_connection()
+
+    connection.execute(
+        "UPDATE collections SET share_id = NULL WHERE id = ?",
+        (collection_id,)
+    )
+
+    connection.commit()
+    connection.close()
+
+    return jsonify({"message": "Collection is now private"})
 
 @app.route("/shared/<share_id>", methods=["GET"])
 def get_shared_collection(share_id):

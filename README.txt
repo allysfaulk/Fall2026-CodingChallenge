@@ -5,7 +5,10 @@ Vanderbilt Email: [ally.s.faulk@vanderbilt.edu](mailto:ally.s.faulk@vanderbilt.e
 
 OVERVIEW
 
-This application allows users to search for images, organize them into collections, edit image captions, and share collections through unique links. The frontend is built with React and Vite, while the backend uses Python and Flask with a SQLite database. Image search is provided through the Pixabay API.
+This application allows users to search for images, organize them into collections, 
+edit image captions, and share collections through unique links. The frontend is 
+built with React and Vite, while the backend uses Python and Flask with a SQLite database. 
+Image search is provided through the Pixabay API.
 
 SETUP AND RUNNING THE APPLICATION
 
@@ -76,8 +79,16 @@ FEATURES
 
 REFLECTION
 
-This challenge was my first experience building a full-stack web application. I learned how a React frontend communicates with a Flask REST API and how to persist application data with SQLite. I also learned about HTTP methods, external APIs, environment variables, component state, and organizing a larger project. The most challenging part was understanding how the frontend, backend, and database fit together, but building each piece incrementally made those relationships much clearer.
+This challenge was my first experience building a full-stack web application. 
+I learned how a React frontend communicates with a Flask REST API and how to 
+persist application data with SQLite. I also learned about HTTP methods, 
+external APIs, environment variables, component state, and organizing a larger project. 
+The most challenging part was understanding how the frontend, backend, and database fit 
+together, but building each piece incrementally made those relationships much clearer.
 
 FEEDBACK
 
-I appreciated that the challenge allowed flexibility in the technologies used and encouraged learning unfamiliar tools. The project was challenging as someone new to web development, but it provided a useful introduction to how the different parts of a full-stack application work together.
+I appreciated that the challenge allowed flexibility in the technologies used 
+and encouraged learning unfamiliar tools. The project was challenging as someone 
+new to web development, but it provided a useful introduction to how the different 
+parts of a full-stack application work together.

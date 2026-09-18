@@ -368,3 +368,28 @@ button:hover {
 .collection-preview-info .collection-actions {
   justify-content: flex-start;
 }
+
+.badge-public {
+  color: #1a7f37;
+  font-weight: bold;
+}
+
+.badge-private {
+  color: #777;
+}
+
+.no-results {
+  margin-top: 24px;
+  color: #666;
+  text-align: center;
+}
+
+.collection-preview-card {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.collection-preview-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
