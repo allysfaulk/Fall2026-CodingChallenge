@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import ImageList from './ImageList'
+import ImageSearch from './ImageSearch'
 
 function App() {
   const [collections, setCollections] = useState([])
@@ -48,6 +49,8 @@ function deleteCollection(id) {
       <h1>My Image Collections</h1>
       <p>Save and organize your favorite images.</p>
 
+      <ImageSearch collections={collections} />
+
       <button onClick={createCollection}>
         Create Collection
       </button>
@@ -61,7 +64,7 @@ function deleteCollection(id) {
     </button>
 
     <ImageList collectionId={collection.id} />
-    
+
   </div>
 
 ))}

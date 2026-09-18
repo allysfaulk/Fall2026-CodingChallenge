@@ -1,7 +1,15 @@
 import sqlite3
+import os
+import urllib.parse
+import urllib.request
+from dotenv import load_dotenv
 
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+
+load_dotenv("backend/.env")
+
+PIXABAY_API_KEY = os.getenv("PIXABAY_API_KEY")
 
 app = Flask(__name__)
 CORS(app)
@@ -141,6 +149,40 @@ def delete_image(image_id):
     connection.close()
 
     return jsonify({"message": "Image deleted"})
+
+@app.route("/search", methods=["GET"])
+def search_images():
+    query = request.args.get("q", "")
+
+    if not query:
+        return jsonify([])
+
+    params = urllib.parse.urlencode({
+        "key": PIXABAY_API_KEY,
+        "q": query,
+        "image_type": "photo",
+        "per_page": 12
+    })
+
+    url = f"https://pixabay.com/api/?{params}"
+
+    with urllib.request.urlopen(url) as response:
+        data = response.read()
+
+    import json
+    pixabay_data = json.loads(data)
+
+    results = []
+
+    for image in pixabay_data["hits"]:
+        results.append({
+            "id": image["id"],
+            "url": image["webformatURL"],
+            "preview": image["previewURL"],
+            "tags": image["tags"]
+        })
+
+    return jsonify(results)
 
 if __name__ == "__main__":
     initialize_database()

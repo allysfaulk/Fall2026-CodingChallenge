@@ -1,0 +1,6 @@
+# Secret environment variables
+backend/.env
+
+# Python cache files
+__pycache__/
+*.pyc
